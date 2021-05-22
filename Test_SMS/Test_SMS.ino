@@ -19,8 +19,8 @@ const char simPIN[]   = "1111";
 // Configure TinyGSM library
 #define TINY_GSM_MODEM_SIM800      // Modem is SIM800
 #define TINY_GSM_RX_BUFFER   1024  // Set RX buffer to 1Kb
+#define DUMP_AT_COMMANDS
 
-#include <Wire.h>
 #include <TinyGsmClient.h>
 
 // TTGO T-Call pins
@@ -37,40 +37,11 @@ const char simPIN[]   = "1111";
 // Set serial for AT commands (to SIM800 module)
 #define SerialAT  Serial1
 
-// Define the serial console for debug prints, if needed
-//#define DUMP_AT_COMMANDS
-
-#ifdef DUMP_AT_COMMANDS
-  #include <StreamDebugger.h>
-  StreamDebugger debugger(SerialAT, SerialMon);
-  TinyGsm modem(debugger);
-#else
-  TinyGsm modem(SerialAT);
-#endif
-
-#define IP5306_ADDR          0x75
-#define IP5306_REG_SYS_CTL0  0x00
-
-bool setPowerBoostKeepOn(int en){
-  Wire.beginTransmission(IP5306_ADDR);
-  Wire.write(IP5306_REG_SYS_CTL0);
-  if (en) {
-    Wire.write(0x37); // Set bit1: 1 enable 0 disable boost keep on
-  } else {
-    Wire.write(0x35); // 0x37 is default reg value
-  }
-  return Wire.endTransmission() == 0;
-}
+TinyGsm modem(SerialAT);
 
 void setup() {
   // Set console baud rate
   SerialMon.begin(115200);
-
-  // Keep power when running from battery
-  Wire.begin(I2C_SDA, I2C_SCL);
-  bool isOk = setPowerBoostKeepOn(1);
-  SerialMon.println(String("IP5306 KeepOn ") + (isOk ? "OK" : "FAIL"));
-
   // Set modem reset, enable, power pins
   pinMode(MODEM_PWKEY, OUTPUT);
   pinMode(MODEM_RST, OUTPUT);
@@ -93,9 +64,9 @@ void setup() {
   if (strlen(simPIN) && modem.getSimStatus() != 3 ) {
     modem.simUnlock(simPIN);
   }
-
+  delay(3);
   // To send an SMS, call modem.sendSMS(SMS_TARGET, smsMessage)
-  String smsMessage = "Testing antena";
+  String smsMessage = "Testing GPS";
   if(modem.sendSMS(SMS_TARGET, smsMessage)){
     SerialMon.println(smsMessage);
   }
