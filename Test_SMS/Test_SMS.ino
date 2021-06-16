@@ -29,8 +29,6 @@ const char simPIN[]   = "1111";
 #define MODEM_POWER_ON       23
 #define MODEM_TX             27
 #define MODEM_RX             26
-#define I2C_SDA              21
-#define I2C_SCL              22
 
 // Set serial for debug console (to Serial Monitor, default speed 115200)
 #define SerialMon Serial
@@ -64,9 +62,9 @@ void setup() {
   if (strlen(simPIN) && modem.getSimStatus() != 3 ) {
     modem.simUnlock(simPIN);
   }
-  delay(3);
+  delay(5000);
   // To send an SMS, call modem.sendSMS(SMS_TARGET, smsMessage)
-  String smsMessage = "Testing GPS";
+  String smsMessage = "Regards from L.A.";
   if(modem.sendSMS(SMS_TARGET, smsMessage)){
     SerialMon.println(smsMessage);
   }

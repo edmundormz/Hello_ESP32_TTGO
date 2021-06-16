@@ -41,9 +41,9 @@
 // #define TINY_GSM_TEST_USSD true
 //#define TINY_GSM_TEST_BATTERY true
 //#define TINY_GSM_TEST_TEMPERATURE true
-#define TINY_GSM_TEST_GSM_LOCATION true
+//#define TINY_GSM_TEST_GSM_LOCATION true
 //#define TINY_GSM_TEST_TIME true
-#define TINY_GSM_TEST_GPS true
+//#define TINY_GSM_TEST_GPS true
 // powerdown modem after tests
 //#define TINY_GSM_POWERDOWN true
 
@@ -51,10 +51,17 @@
 #define GSM_PIN "1111"
 
 // Your GPRS credentials, if any
+//Para México
 const char apn[] = "internet.itelcel.com";
 const char gprsUser[] = "webgprs";
 const char gprsPass[] = "webgprs2002";
 
+//For the US
+/*
+const char apn[] = "wap.tracfone";
+const char gprsUser[] = "";
+const char gprsPass[] = "";
+*/
 #include <TinyGsmClient.h>
 
 #if TINY_GSM_TEST_GPRS && not defined TINY_GSM_MODEM_HAS_GPRS
@@ -160,6 +167,7 @@ void loop() {
 #if TINY_GSM_TEST_GPRS
   DBG("Connecting to", apn);
   if (!modem.gprsConnect(apn, gprsUser, gprsPass)) {
+  //if (!modem.gprsConnect(apn)) {
     delay(10000);
     return;
   }
