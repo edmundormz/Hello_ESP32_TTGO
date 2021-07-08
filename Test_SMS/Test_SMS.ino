@@ -62,9 +62,9 @@ void setup() {
   if (strlen(simPIN) && modem.getSimStatus() != 3 ) {
     modem.simUnlock(simPIN);
   }
-  delay(5000);
+  delay(3);
   // To send an SMS, call modem.sendSMS(SMS_TARGET, smsMessage)
-  String smsMessage = "Regards from L.A.";
+  String smsMessage = "Testing GPS";
   if(modem.sendSMS(SMS_TARGET, smsMessage)){
     SerialMon.println(smsMessage);
   }
